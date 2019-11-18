@@ -1,5 +1,5 @@
 data "oci_identity_availability_domains" "ADs" {
-  compartment_id = "${var.tenancy_ocid}"
+  compartment_id = var.tenancy_ocid
 }
 
 resource "template_file" "etcd_discovery_url" {

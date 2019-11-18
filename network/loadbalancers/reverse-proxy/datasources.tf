@@ -1,8 +1,8 @@
 data "template_file" "conf" {
   template = "${file("${path.module}/templates/nginx.conf")}"
 
-  vars {
-    servers           = "${join("\n", formatlist("        server %s:443;", var.hosts))}"
+  vars = {
+    servers           = "${join("\n", formatlist("        server %s:443;", flatten(var.hosts)))}"
     nginx_listen_port = "${var.nginx_listen_port}"
   }
 }
@@ -10,7 +10,7 @@ data "template_file" "conf" {
 data "template_file" "setup" {
   template = "${file("${path.module}/templates/setup.sh")}"
 
-  vars {
+  vars = {
     nginx_version     = "${var.nginx_version}"
     nginx_listen_port = "${var.nginx_listen_port}"
   }
@@ -19,7 +19,7 @@ data "template_file" "setup" {
 data "template_file" "clount_init" {
   template = "${file("${path.module}/templates/clount_init.yaml")}"
 
-  vars {
+  vars = {
     nginx_conf = "${base64gzip(data.template_file.conf.rendered)}"
   }
 }

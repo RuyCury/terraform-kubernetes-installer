@@ -150,7 +150,7 @@ variable "internal_icmp_ingress" {
 variable "nat_instance_ssh_public_key_openssh" {}
 
 variable "nat_instance_oracle_linux_image_name" {
-  default = "Oracle-Linux-7.5-2018.10.16-0"
+  default = "Oracle-Linux-7.7-2019.11.12-0"
 }
 
 variable "nat_instance_shape" {

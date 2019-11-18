@@ -3,7 +3,7 @@
  */
 
 resource "oci_core_instance" "TFInstanceK8sMaster" {
-  count               = "${var.count}"
+  count               = "${var.instances_count}"
   availability_domain = "${var.availability_domain}"
   compartment_id      = "${var.compartment_ocid}"
   display_name        = "${var.label_prefix}${var.display_name_prefix}-${count.index}"
@@ -19,7 +19,7 @@ resource "oci_core_instance" "TFInstanceK8sMaster" {
     private_ip       = "${var.assign_private_ip == "true" ? cidrhost(lookup(var.network_cidrs,var.subnet_name), count.index+2) : ""}"
   }
 
-  extended_metadata {
+  extended_metadata = {
     roles               = "masters"
     ssh_authorized_keys = "${var.ssh_public_key_openssh}"
 

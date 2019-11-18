@@ -77,27 +77,27 @@ output "ccmlb_subnet_ad3_id" {
 
 
 output "nat_instance_ad1_private_ips" {
-  value = ["${oci_core_instance.NATInstanceAD1.*.private_ip}"]
+  value = "${oci_core_instance.NATInstanceAD1.*.private_ip}"
 }
 
 output "nat_instance_ad1_public_ips" {
-  value = ["${oci_core_instance.NATInstanceAD1.*.public_ip}"]
+  value = "${oci_core_instance.NATInstanceAD1.*.public_ip}"
 }
 
 output "nat_instance_ad2_private_ips" {
-  value = ["${oci_core_instance.NATInstanceAD2.*.private_ip}"]
+  value = "${oci_core_instance.NATInstanceAD2.*.private_ip}"
 }
 
 output "nat_instance_ad2_public_ips" {
-  value = ["${oci_core_instance.NATInstanceAD2.*.public_ip}"]
+  value = "${oci_core_instance.NATInstanceAD2.*.public_ip}"
 }
 
 output "nat_instance_ad3_private_ips" {
-  value = ["${oci_core_instance.NATInstanceAD3.*.private_ip}"]
+  value = "${oci_core_instance.NATInstanceAD3.*.private_ip}"
 }
 
 output "nat_instance_ad3_public_ips" {
-  value = ["${oci_core_instance.NATInstanceAD3.*.public_ip}"]
+  value = "${oci_core_instance.NATInstanceAD3.*.public_ip}"
 }
 
 output "control_plane_subnet_access" {

@@ -36,7 +36,7 @@ resource "oci_core_route_table" "NATInstanceAD1RouteTable" {
     cidr_block = "0.0.0.0/0"
 
     # Private IP route target for instances on private AD1 subnets
-    network_entity_id = "${data.oci_core_private_ips.NATInstanceAD1PrivateIPDatasource.private_ips.0.id}"
+    network_entity_id = "${data.oci_core_private_ips.NATInstanceAD1PrivateIPDatasource[count.index].private_ips.0.id}"
   }
 }
 
@@ -52,7 +52,7 @@ resource "oci_core_route_table" "NATInstanceAD2RouteTable" {
     cidr_block = "0.0.0.0/0"
 
     # Private IP route target for instances on private AD2 subnets
-    network_entity_id = "${data.oci_core_private_ips.NATInstanceAD2PrivateIPDatasource.private_ips.0.id}"
+    network_entity_id = "${data.oci_core_private_ips.NATInstanceAD2PrivateIPDatasource[count.index].private_ips.0.id}"
   }
 }
 
@@ -68,6 +68,6 @@ resource "oci_core_route_table" "NATInstanceAD3RouteTable" {
     cidr_block = "0.0.0.0/0"
 
     # Private IP route target for instances on private AD3 subnets
-    network_entity_id = "${data.oci_core_private_ips.NATInstanceAD3PrivateIPDatasource.private_ips.0.id}"
+    network_entity_id = "${data.oci_core_private_ips.NATInstanceAD3PrivateIPDatasource[count.index].private_ips.0.id}"
   }
 }

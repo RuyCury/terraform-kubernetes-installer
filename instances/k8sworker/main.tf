@@ -3,7 +3,7 @@
  */
 
 resource "oci_core_instance" "TFInstanceK8sWorker" {
-  count               = "${var.count}"
+  count               = "${var.instances_count}"
   availability_domain = "${var.availability_domain}"
   compartment_id      = "${var.compartment_ocid}"
   display_name        = "${var.label_prefix}${var.display_name_prefix}-${count.index}"
@@ -12,7 +12,7 @@ resource "oci_core_instance" "TFInstanceK8sWorker" {
   shape               = "${var.shape}"
   subnet_id           = "${var.subnet_id}"
 
-  extended_metadata {
+  extended_metadata = {
     roles               = "nodes"
     ssh_authorized_keys = "${var.ssh_public_key_openssh}"
 
@@ -49,7 +49,7 @@ resource "oci_core_instance" "TFInstanceK8sWorker" {
 }
 
 resource "oci_core_volume" "TFVolumeK8sWorker" {
-  count               = "${var.worker_iscsi_volume_create ? var.count : 0}"
+  count               = "${var.worker_iscsi_volume_create ? var.instances_count : 0}"
   availability_domain = "${var.availability_domain}"
   compartment_id      = "${var.compartment_ocid}"
   display_name        = "block-volume-${var.hostname_label_prefix}-${count.index}"
@@ -57,9 +57,9 @@ resource "oci_core_volume" "TFVolumeK8sWorker" {
 }
 
 resource "oci_core_volume_attachment" "TFVolumeAttachmentK8sWorker" {
-  count           = "${var.worker_iscsi_volume_create ? var.count : 0}"
+  count           = "${var.worker_iscsi_volume_create ? var.instances_count : 0}"
   attachment_type = "iscsi"
-  compartment_id  = "${var.compartment_ocid}"
+#  compartment_id  = "${var.compartment_ocid}"
   instance_id     = "${oci_core_instance.TFInstanceK8sWorker.*.id[count.index]}"
   volume_id       = "${oci_core_volume.TFVolumeK8sWorker.*.id[count.index]}"
   depends_on      = ["oci_core_instance.TFInstanceK8sWorker", "oci_core_volume.TFVolumeK8sWorker"]

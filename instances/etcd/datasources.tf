@@ -13,7 +13,7 @@ data "oci_identity_availability_domains" "ADs" {
 data "template_file" "etcd-bootstrap" {
   template = "${file("${path.module}/cloud_init/bootstrap.template.sh")}"
 
-  vars {
+  vars = {
     domain_name               = "${var.domain_name}"
     docker_ver                = "${var.docker_ver}"
     etcd_ver                  = "${var.etcd_ver}"

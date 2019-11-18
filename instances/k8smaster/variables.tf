@@ -10,7 +10,7 @@ variable "flannel_backend" {}
 
 variable "kubernetes_network_plugin" {}
 
-variable "count" {
+variable "instances_count" {
   default = "1"
 }
 
@@ -40,7 +40,7 @@ variable "docker_ver" {
 }
 
 variable "oracle_linux_image_name" {
-  default = "Oracle-Linux-7.5-2018.10.16-0"
+  default = "Oracle-Linux-7.7-2019.11.12-0"
 }
 
 variable "etcd_ver" {

@@ -14,19 +14,19 @@ data "oci_core_vnic_attachments" "NATInstanceAD1Vnics" {
   count               = "${(var.control_plane_subnet_access == "private") && (var.nat_instance_ad1_enabled == "true") ? "1" : "0"}"
   compartment_id      = "${var.compartment_ocid}"
   availability_domain = "${lookup(data.oci_identity_availability_domains.ADs.availability_domains[0],"name")}"
-  instance_id         = "${oci_core_instance.NATInstanceAD1.id}"
+  instance_id         = "${oci_core_instance.NATInstanceAD1[count.index].id}"
 }
 
 # Gets the OCID of the first (default) VNIC on the NAT instance in AD 1
 data "oci_core_vnic" "NATInstanceAD1Vnic" {
   count   = "${(var.control_plane_subnet_access == "private") && (var.nat_instance_ad1_enabled == "true") ? "1" : "0"}"
-  vnic_id = "${lookup(data.oci_core_vnic_attachments.NATInstanceAD1Vnics.vnic_attachments[0],"vnic_id")}"
+  vnic_id = "${lookup(data.oci_core_vnic_attachments.NATInstanceAD1Vnics[count.index].vnic_attachments[0],"vnic_id")}"
 }
 
 # List Private IPs on the NAT instance in AD 1
 data "oci_core_private_ips" "NATInstanceAD1PrivateIPDatasource" {
   count   = "${(var.control_plane_subnet_access == "private") && (var.nat_instance_ad1_enabled == "true") ? "1" : "0"}"
-  vnic_id = "${data.oci_core_vnic.NATInstanceAD1Vnic.id}"
+  vnic_id = "${data.oci_core_vnic.NATInstanceAD1Vnic[count.index].id}"
 }
 
 # Gets a list of VNIC attachments on the NAT instance in AD 2
@@ -34,19 +34,19 @@ data "oci_core_vnic_attachments" "NATInstanceAD2Vnics" {
   count               = "${(var.control_plane_subnet_access == "private") && (var.nat_instance_ad2_enabled == "true") ? "1" : "0"}"
   compartment_id      = "${var.compartment_ocid}"
   availability_domain = "${lookup(data.oci_identity_availability_domains.ADs.availability_domains[1],"name")}"
-  instance_id         = "${oci_core_instance.NATInstanceAD2.id}"
+  instance_id         = "${oci_core_instance.NATInstanceAD2[count.index].id}"
 }
 
 # Gets the OCID of the first (default) VNIC on the NAT instance in AD 2
 data "oci_core_vnic" "NATInstanceAD2Vnic" {
   count   = "${(var.control_plane_subnet_access == "private") && (var.nat_instance_ad2_enabled == "true") ? "1" : "0"}"
-  vnic_id = "${lookup(data.oci_core_vnic_attachments.NATInstanceAD2Vnics.vnic_attachments[0],"vnic_id")}"
+  vnic_id = "${lookup(data.oci_core_vnic_attachments.NATInstanceAD2Vnics[count.index].vnic_attachments[0],"vnic_id")}"
 }
 
 # List Private IPs on the NAT instance in AD 2
 data "oci_core_private_ips" "NATInstanceAD2PrivateIPDatasource" {
   count   = "${(var.control_plane_subnet_access == "private") && (var.nat_instance_ad2_enabled == "true") ? "1" : "0"}"
-  vnic_id = "${data.oci_core_vnic.NATInstanceAD2Vnic.id}"
+  vnic_id = "${data.oci_core_vnic.NATInstanceAD2Vnic[count.index].id}"
 }
 
 # Gets a list of VNIC attachments on the NAT instance in AD 3
@@ -54,17 +54,17 @@ data "oci_core_vnic_attachments" "NATInstanceAD3Vnics" {
   count               = "${(var.control_plane_subnet_access == "private") && (var.nat_instance_ad3_enabled == "true") ? "1" : "0"}"
   compartment_id      = "${var.compartment_ocid}"
   availability_domain = "${lookup(data.oci_identity_availability_domains.ADs.availability_domains[2],"name")}"
-  instance_id         = "${oci_core_instance.NATInstanceAD3.id}"
+  instance_id         = "${oci_core_instance.NATInstanceAD3[count.index].id}"
 }
 
 # Gets the OCID of the first (default) VNIC on the NAT instance in AD 3
 data "oci_core_vnic" "NATInstanceAD3Vnic" {
   count   = "${(var.control_plane_subnet_access == "private") && (var.nat_instance_ad3_enabled == "true") ? "1" : "0"}"
-  vnic_id = "${lookup(data.oci_core_vnic_attachments.NATInstanceAD3Vnics.vnic_attachments[0],"vnic_id")}"
+  vnic_id = "${lookup(data.oci_core_vnic_attachments.NATInstanceAD3Vnics[count.index].vnic_attachments[0],"vnic_id")}"
 }
 
 # List Private IPs on the NAT instance in AD 3
 data "oci_core_private_ips" "NATInstanceAD3PrivateIPDatasource" {
   count   = "${(var.control_plane_subnet_access == "private") && (var.nat_instance_ad3_enabled == "true") ? "1" : "0"}"
-  vnic_id = "${data.oci_core_vnic.NATInstanceAD3Vnic.id}"
+  vnic_id = "${data.oci_core_vnic.NATInstanceAD3Vnic[count.index].id}"
 }

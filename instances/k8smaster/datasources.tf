@@ -112,7 +112,7 @@ data "template_file" "master-kubeconfig" {
 data "template_file" "token_auth_file" {
   template = "${file("${path.module}/scripts/token_auth.csv")}"
 
-  vars {
+  vars = {
     token_admin = "${var.k8s_apiserver_token_admin}"
   }
 }

@@ -11,13 +11,13 @@ resource "oci_core_instance" "NATInstanceAD1" {
   shape               = "${var.nat_instance_shape}"
 
   create_vnic_details {
-    subnet_id = "${(var.control_plane_subnet_access == "private") && (var.dedicated_nat_subnets == "true") ? "${element(concat(oci_core_subnet.NATSubnetAD1.*.id,list("")),0)}" : "${oci_core_subnet.PublicSubnetAD1.id}"}"
+    subnet_id = "${(var.control_plane_subnet_access == "private") && (var.dedicated_nat_subnets == "true") ? "${element(concat(oci_core_subnet.NATSubnetAD1.*.id,list("")),0)}" : "${oci_core_subnet.PublicSubnetAD1[count.index].id}"}"
 
     # Skip the source/destination check so that the VNIC will forward traffic.
     skip_source_dest_check = true
   }
 
-  metadata {
+  metadata = {
     ssh_authorized_keys = "${var.nat_instance_ssh_public_key_openssh}"
 
     # Automate NAT instance configuration with cloud init run at launch
@@ -38,13 +38,13 @@ resource "oci_core_instance" "NATInstanceAD2" {
   shape               = "${var.nat_instance_shape}"
 
   create_vnic_details {
-    subnet_id = "${(var.control_plane_subnet_access == "private") && (var.dedicated_nat_subnets == "true") ? "${element(concat(oci_core_subnet.NATSubnetAD2.*.id,list("")),0)}" : "${oci_core_subnet.PublicSubnetAD2.id}"}"
+    subnet_id = "${(var.control_plane_subnet_access == "private") && (var.dedicated_nat_subnets == "true") ? "${element(concat(oci_core_subnet.NATSubnetAD2.*.id,list("")),0)}" : "${oci_core_subnet.PublicSubnetAD2[count.index].id}"}"
 
     # Skip the source/destination check so that the VNIC will forward traffic.
     skip_source_dest_check = true
   }
 
-  metadata {
+  metadata = {
     ssh_authorized_keys = "${var.nat_instance_ssh_public_key_openssh}"
     user_data           = "${base64encode(file("${path.module}/cloud_init/bootstrap.template.yaml"))}"
   }
@@ -63,13 +63,13 @@ resource "oci_core_instance" "NATInstanceAD3" {
   shape               = "${var.nat_instance_shape}"
 
   create_vnic_details {
-    subnet_id = "${(var.control_plane_subnet_access == "private") && (var.dedicated_nat_subnets == "true") ? "${element(concat(oci_core_subnet.NATSubnetAD3.*.id,list("")),0)}" : "${oci_core_subnet.PublicSubnetAD3.id}"}"
+    subnet_id = "${(var.control_plane_subnet_access == "private") && (var.dedicated_nat_subnets == "true") ? "${element(concat(oci_core_subnet.NATSubnetAD3.*.id,list("")),0)}" : "${oci_core_subnet.PublicSubnetAD3[count.index].id}"}"
 
     # Skip the source/destination check so that the VNIC will forward traffic.
     skip_source_dest_check = true
   }
 
-  metadata {
+  metadata = {
     ssh_authorized_keys = "${var.nat_instance_ssh_public_key_openssh}"
     user_data           = "${base64encode(file("${path.module}/cloud_init/bootstrap.template.yaml"))}"
   }

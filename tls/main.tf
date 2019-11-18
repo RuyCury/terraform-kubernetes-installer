@@ -9,7 +9,7 @@ resource "tls_private_key" "root-ca" {
 resource "tls_self_signed_cert" "root-ca" {
   count             = "${var.ca_cert == "" ? 1 : 0}"
   key_algorithm     = "RSA"
-  private_key_pem   = "${tls_private_key.root-ca.private_key_pem}"
+  private_key_pem   = "${tls_private_key.root-ca[count.index].private_key_pem}"
   is_ca_certificate = true
 
   subject {
@@ -37,7 +37,7 @@ resource "tls_private_key" "api-server" {
 resource "tls_cert_request" "api-server" {
   count           = "${var.api_server_cert == "" ? 1 : 0}"
   key_algorithm   = "RSA"
-  private_key_pem = "${tls_private_key.api-server.private_key_pem}"
+  private_key_pem = "${tls_private_key.api-server[count.index].private_key_pem}"
 
   # TODO DNS name of LB
   dns_names = "${concat(list(var.k8s-serviceip),
@@ -48,11 +48,11 @@ resource "tls_cert_request" "api-server" {
       "kubernetes.default.svc",
       "kubernetes.default.svc.cluster.local"
     ))}"
-  ip_addresses = ["${distinct(list(
+  ip_addresses = "${distinct(list(
       "${var.master_lb_public_ip}",
       "${var.k8s-serviceip}",
       "127.0.0.1"
-  ))}"]
+  ))}"
 
   # system:masters group
   subject {
@@ -63,10 +63,10 @@ resource "tls_cert_request" "api-server" {
 
 resource "tls_locally_signed_cert" "api-server" {
   count                 = "${var.api_server_cert == "" ? 1 : 0}"
-  cert_request_pem      = "${tls_cert_request.api-server.cert_request_pem}"
+  cert_request_pem      = "${tls_cert_request.api-server[count.index].cert_request_pem}"
   ca_key_algorithm      = "RSA"
-  ca_private_key_pem    = "${tls_private_key.root-ca.private_key_pem}"
-  ca_cert_pem           = "${tls_self_signed_cert.root-ca.cert_pem}"
+  ca_private_key_pem    = "${tls_private_key.root-ca[count.index].private_key_pem}"
+  ca_cert_pem           = "${tls_self_signed_cert.root-ca[count.index].cert_pem}"
   validity_period_hours = "${var.validity_period_hours}"
 
   allowed_uses = [

@@ -7,5 +7,5 @@ output "private_ips" {
 }
 
 output "public_ips" {
-  value = ["${oci_core_instance.TFInstanceK8sMaster.*.public_ip}"]
+  value = "${oci_core_instance.TFInstanceK8sMaster.*.public_ip}"
 }

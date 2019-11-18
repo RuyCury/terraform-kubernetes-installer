@@ -1,10 +1,12 @@
 # OCI Service
-variable "tenancy_ocid" {}
+variable "tenancy_ocid" {
+}
 
-variable "compartment_ocid" {}
+variable "compartment_ocid" {
+}
 
 variable "network_cidrs" {
-  type = "map"
+  type = map(string)
 
   default = {
     VCN-CIDR          = "10.0.0.0/16"
@@ -30,7 +32,7 @@ variable "network_cidrs" {
 }
 
 variable "network_subnet_dns" {
-  type = "map"
+  type = map(string)
 
   default = {
     etcdSubnetAD1     = "etcdsubnet1"
@@ -48,14 +50,18 @@ variable "network_subnet_dns" {
   }
 }
 
-
 variable "domain_name" {
   default = "kubernetes.oraclevcn.com"
 }
 
-variable "user_ocid" {}
-variable "fingerprint" {}
-variable "private_key_path" {}
+variable "user_ocid" {
+}
+
+variable "fingerprint" {
+}
+
+variable "private_key_path" {
+}
 
 variable "region" {
   default = "us-phoenix-1"
@@ -75,32 +81,32 @@ variable "private_key_password" {
 
 variable "label_prefix" {
   description = "To create unique identifier for multiple clusters in a compartment."
-  type        = "string"
+  type        = string
   default     = ""
 }
 
 variable "additional_etcd_security_lists_ids" {
-  type    = "list"
+  type    = list(string)
   default = []
 }
 
 variable "additional_k8s_master_security_lists_ids" {
-  type    = "list"
+  type    = list(string)
   default = []
 }
 
 variable "additional_k8s_worker_security_lists_ids" {
-  type    = "list"
+  type    = list(string)
   default = []
 }
 
 variable "additional_public_security_lists_ids" {
-  type    = "list"
+  type    = list(string)
   default = []
 }
 
 variable "additional_nat_security_lists_ids" {
-  type    = "list"
+  type    = list(string)
   default = []
 }
 
@@ -155,25 +161,25 @@ variable "etcdAd3Count" {
 }
 
 variable "etcd_endpoints" {
-  type    = "string"
+  type    = string
   default = " "
 }
 
 variable "ssh_public_key_openssh" {
   description = "SSH public key in OpenSSH authorized_keys format for instances (generated if left blank)"
-  type        = "string"
+  type        = string
   default     = ""
 }
 
 variable "kubernetes_network_plugin" {
   description = "The Kubernetes network plugin to use: flannel | canal"
-  type        = "string"
+  type        = string
   default     = "flannel"
 }
 
 variable "flannel_network_cidr" {
   description = "A CIDR notation IP range to use for the entire flannel network"
-  type        = "string"
+  type        = string
   default     = "10.99.0.0/16"
 }
 
@@ -239,14 +245,14 @@ variable "internal_icmp_ingress" {
 
 variable "ssh_private_key" {
   description = "SSH private key used for instances (generated if left blank)"
-  type        = "string"
+  type        = string
   default     = ""
 }
 
 # Load Balancers
 variable "etcd_lb_enabled" {
   description = "enable/disable the etcd load balancer. true: use the etcd load balancer ip. false:use a list of etcd instance ips."
-  default = "true"
+  default     = "true"
 }
 
 variable "etcdLBShape" {
@@ -255,7 +261,7 @@ variable "etcdLBShape" {
 
 variable "master_oci_lb_enabled" {
   description = "enable/disable the k8s master load balancer. true: use the k8s master load balancer ip. false: use a reverse proxy for k8s masters."
-  default = "true"
+  default     = "true"
 }
 
 variable "k8sMasterLBShape" {
@@ -296,31 +302,31 @@ variable "worker_docker_max_log_files" {
 # Kubernetes
 variable "ca_cert" {
   description = "CA certificate (generated if left blank)"
-  type        = "string"
+  type        = string
   default     = ""
 }
 
 variable "ca_key" {
   description = "CA private key (generated if left blank)"
-  type        = "string"
+  type        = string
   default     = ""
 }
 
 variable "api_server_private_key" {
   description = "API Server private key (generated if left blank)"
-  type        = "string"
+  type        = string
   default     = ""
 }
 
 variable "api_server_cert" {
   description = "API Server certificate (generated if left blank)"
-  type        = "string"
+  type        = string
   default     = ""
 }
 
 variable "api_server_admin_token" {
   description = "admin user's bearer token for API server (generated if left blank)"
-  type        = "string"
+  type        = string
   default     = ""
 }
 
@@ -349,19 +355,19 @@ variable "k8s_dns_ver" {
 }
 
 variable "master_ol_image_name" {
-  default = "Oracle-Linux-7.5-2018.10.16-0"
+  default = "Oracle-Linux-7.7-2019.11.12-0"
 }
 
 variable "worker_ol_image_name" {
-  default = "Oracle-Linux-7.5-2018.10.16-0"
+  default = "Oracle-Linux-7.7-2019.11.12-0"
 }
 
 variable "etcd_ol_image_name" {
-  default = "Oracle-Linux-7.5-2018.10.16-0"
+  default = "Oracle-Linux-7.7-2019.11.12-0"
 }
 
 variable "nat_ol_image_name" {
-  default = "Oracle-Linux-7.5-2018.10.16-0"
+  default = "Oracle-Linux-7.7-2019.11.12-0"
 }
 
 variable "control_plane_subnet_access" {
@@ -393,22 +399,22 @@ variable "natInstanceShape" {
   default     = "VM.Standard1.1"
 }
 
-variable nat_instance_ad1_enabled {
+variable "nat_instance_ad1_enabled" {
   description = "Whether to provision a NAT instance in AD 1 (only applicable when control_plane_subnet_access=private)"
   default     = "true"
 }
 
-variable nat_instance_ad2_enabled {
+variable "nat_instance_ad2_enabled" {
   description = "Whether to provision a NAT instance in AD 2 (only applicable when control_plane_subnet_access=private)"
   default     = "false"
 }
 
-variable nat_instance_ad3_enabled {
+variable "nat_instance_ad3_enabled" {
   description = "Whether to provision a NAT instance in AD 3 (only applicable when control_plane_subnet_access=private)"
   default     = "false"
 }
 
-variable dedicated_nat_subnets {
+variable "dedicated_nat_subnets" {
   description = "Whether to provision dedicated subnets in each AD that are only used by NAT instance(s) (only applicable when control_plane_subnet_access=private)"
   default     = "true"
 }
@@ -506,3 +512,4 @@ variable "volume_provisioner_user_private_key_path" {
 variable "volume_provisioner_user_private_key_password" {
   default = ""
 }
+
