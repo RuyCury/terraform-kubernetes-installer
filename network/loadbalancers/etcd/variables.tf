@@ -16,17 +16,17 @@ variable "etcdAd3Count" {}
 variable "etcd_lb_enabled" {}
 
 variable "etcd_ad1_private_ips" {
-  type    = "list"
+  type    = list(string)
   default = []
 }
 
 variable "etcd_ad2_private_ips" {
-  type    = "list"
+  type    = list(string)
   default = []
 }
 
 variable "etcd_ad3_private_ips" {
-  type    = "list"
+  type    = list(string)
   default = []
 }
 

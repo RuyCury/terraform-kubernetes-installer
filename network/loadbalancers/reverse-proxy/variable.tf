@@ -7,6 +7,6 @@ variable "nginx_listen_port" {
 }
 
 variable "hosts" {
-  type = "list"
+  type = list(string)
 }
 

@@ -11,7 +11,7 @@ variable "subnet2" {}
 
 variable "label_prefix" {
   description = "To create unique identifier for multiple clusters in a compartment."
-  type        = "string"
+  type        = string
 }
 
 # OCI cloud controller manager credentials to use.

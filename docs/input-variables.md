@@ -20,7 +20,7 @@ name                                | default                 | description
 ------------------------------------|-------------------------|------------
 etcdShape                           | VM.Standard1.1          | OCI shape for etcd nodes
 k8sMasterShape                      | VM.Standard1.1          | OCI shape for k8s master(s)
-k8sWorkerShape                      | VM.Standard1.2          | OCI shape for k8s worker(s)
+k8sWorkerShape                      | VM.Standard.E2.1          | OCI shape for k8s worker(s)
 master_oci_lb_enabled               | "true"                  | enable/disable the k8s master oci load balancer. "true": use oci load balancer for k8s master . "false": use a reverse proxy as a software load balancer for k8s masters.
 etcdLBShape                         | 100Mbps                 | etcd cluster OCI Load Balancer shape / bandwidth
 etcd_lb_enabled                     | "true"                  | enable/disable the etcd load balancer. "true" use the etcd load balancer ip, "false" use a list of etcd instance ips

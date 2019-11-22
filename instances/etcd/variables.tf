@@ -1,5 +1,5 @@
 variable "network_cidrs" {
-  type = "map"
+  type = map(string)
 }
 variable "availability_domain" {}
 variable "compartment_ocid" {}

@@ -3,14 +3,14 @@
  */
 
 resource "oci_core_instance" "TFInstanceK8sWorker" {
-  count               = "${var.instances_count}"
-  availability_domain = "${var.availability_domain}"
-  compartment_id      = "${var.compartment_ocid}"
+  count               = var.instances_count
+  availability_domain = var.availability_domain
+  compartment_id      = var.compartment_ocid
   display_name        = "${var.label_prefix}${var.display_name_prefix}-${count.index}"
   hostname_label      = "${var.hostname_label_prefix}-${count.index}"
-  image               = "${lookup(data.oci_core_images.ImageOCID.images[0], "id")}"
-  shape               = "${var.shape}"
-  subnet_id           = "${var.subnet_id}"
+  image               = lookup(data.oci_core_images.ImageOCID.images[0], "id")
+  shape               = var.shape
+  subnet_id           = var.subnet_id
 
   extended_metadata = {
     roles               = "nodes"
@@ -23,7 +23,7 @@ resource "oci_core_instance" "TFInstanceK8sWorker" {
 
   # TODO handle scenario when control_plane_subnet_access = "private"
   provisioner "remote-exec" {
-    when = "destroy"
+    when = destroy
 
     inline = [
       "nodeName=`getent hosts $(/usr/sbin/ip route get 1 | awk '{print $NF;exit}') | awk '{print $2}'`",
@@ -32,12 +32,12 @@ resource "oci_core_instance" "TFInstanceK8sWorker" {
       "exit 0",
     ]
 
-    on_failure = "continue"
+    on_failure = continue
 
     connection {
-      host        = "${self.public_ip}"
+      host        = self.public_ip
       user        = "opc"
-      private_key = "${var.ssh_private_key}"
+      private_key = var.ssh_private_key
       agent       = false
       timeout     = "30s"
     }
@@ -49,18 +49,18 @@ resource "oci_core_instance" "TFInstanceK8sWorker" {
 }
 
 resource "oci_core_volume" "TFVolumeK8sWorker" {
-  count               = "${var.worker_iscsi_volume_create ? var.instances_count : 0}"
-  availability_domain = "${var.availability_domain}"
-  compartment_id      = "${var.compartment_ocid}"
+  count               = var.worker_iscsi_volume_create ? var.instances_count : 0
+  availability_domain = var.availability_domain
+  compartment_id      = var.compartment_ocid
   display_name        = "block-volume-${var.hostname_label_prefix}-${count.index}"
-  size_in_gbs         = "${var.worker_iscsi_volume_size}"
+  size_in_gbs         = var.worker_iscsi_volume_size
 }
 
 resource "oci_core_volume_attachment" "TFVolumeAttachmentK8sWorker" {
-  count           = "${var.worker_iscsi_volume_create ? var.instances_count : 0}"
+  count           = var.worker_iscsi_volume_create ? var.instances_count : 0
   attachment_type = "iscsi"
 #  compartment_id  = "${var.compartment_ocid}"
-  instance_id     = "${oci_core_instance.TFInstanceK8sWorker.*.id[count.index]}"
-  volume_id       = "${oci_core_volume.TFVolumeK8sWorker.*.id[count.index]}"
-  depends_on      = ["oci_core_instance.TFInstanceK8sWorker", "oci_core_volume.TFVolumeK8sWorker"]
+  instance_id     = oci_core_instance.TFInstanceK8sWorker.*.id[count.index]
+  volume_id       = oci_core_volume.TFVolumeK8sWorker.*.id[count.index]
+  depends_on      = [oci_core_instance.TFInstanceK8sWorker, oci_core_volume.TFVolumeK8sWorker]
 }

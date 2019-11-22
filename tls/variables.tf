@@ -25,7 +25,7 @@ variable "api_server_cert" {
 
 variable "api_server_admin_token" {
   description = "admin user's bearer token for API server (generated if left blank)"
-  type        = "string"
+  type        = string
   default     = ""
 }
 

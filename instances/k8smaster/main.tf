@@ -3,20 +3,20 @@
  */
 
 resource "oci_core_instance" "TFInstanceK8sMaster" {
-  count               = "${var.instances_count}"
-  availability_domain = "${var.availability_domain}"
-  compartment_id      = "${var.compartment_ocid}"
+  count               = var.instances_count
+  availability_domain = var.availability_domain
+  compartment_id      = var.compartment_ocid
   display_name        = "${var.label_prefix}${var.display_name_prefix}-${count.index}"
   hostname_label      = "${var.hostname_label_prefix}-${count.index}"
-  image               = "${lookup(data.oci_core_images.ImageOCID.images[0], "id")}"
-  shape               = "${var.shape}"
+  image               = lookup(data.oci_core_images.ImageOCID.images[0], "id")
+  shape               = var.shape
 
   create_vnic_details {
-    subnet_id        = "${var.subnet_id}"
+    subnet_id        = var.subnet_id
     display_name     = "${var.label_prefix}${var.display_name_prefix}-${count.index}"
     hostname_label   = "${var.hostname_label_prefix}-${count.index}"
-    assign_public_ip = "${(var.control_plane_subnet_access == "private") ? "false" : "true"}"
-    private_ip       = "${var.assign_private_ip == "true" ? cidrhost(lookup(var.network_cidrs,var.subnet_name), count.index+2) : ""}"
+    assign_public_ip = (var.control_plane_subnet_access == "private") ? "false" : "true"
+    private_ip       = var.assign_private_ip == "true" ? cidrhost(lookup(var.network_cidrs,var.subnet_name), count.index+2) : ""
   }
 
   extended_metadata = {
@@ -29,7 +29,7 @@ resource "oci_core_instance" "TFInstanceK8sMaster" {
   }
 
   provisioner "remote-exec" {
-    when = "destroy"
+    when = destroy
 
     inline = [
       "nodeName=`getent hosts $(/usr/sbin/ip route get 1 | awk '{print $NF;exit}') | awk '{print $2}'`",
@@ -38,12 +38,12 @@ resource "oci_core_instance" "TFInstanceK8sMaster" {
       "exit 0",
     ]
 
-    on_failure = "continue"
+    on_failure = continue
 
     connection {
-      host        = "${self.public_ip}"
+      host        = self.public_ip
       user        = "opc"
-      private_key = "${var.ssh_private_key}"
+      private_key = var.ssh_private_key
       agent       = false
       timeout     = "30s"
     }

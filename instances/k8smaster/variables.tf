@@ -20,7 +20,7 @@ variable "control_plane_subnet_access" {
 }
 
 variable "network_cidrs" {
-  type = "map"
+  type = map(string)
 }
 variable "subnet_id" {}
 variable "subnet_name" {}

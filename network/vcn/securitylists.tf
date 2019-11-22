@@ -1,7 +1,7 @@
 resource "oci_core_security_list" "EtcdSubnet" {
-  compartment_id = "${var.compartment_ocid}"
+  compartment_id = var.compartment_ocid
   display_name   = "${var.label_prefix}etcd_security_list"
-  vcn_id         = "${oci_core_virtual_network.CompleteVCN.id}"
+  vcn_id         = oci_core_virtual_network.CompleteVCN.id
 
   egress_security_rules {
       destination = "0.0.0.0/0"
@@ -10,7 +10,7 @@ resource "oci_core_security_list" "EtcdSubnet" {
   
   ingress_security_rules {
       protocol = "1"
-      source   = "${var.external_icmp_ingress}"
+      source   = var.external_icmp_ingress
 
       icmp_options {
         type = 3
@@ -19,7 +19,7 @@ resource "oci_core_security_list" "EtcdSubnet" {
   }
   ingress_security_rules {
       protocol = "1"
-      source   = "${var.internal_icmp_ingress}"
+      source   = var.internal_icmp_ingress
 
       icmp_options {
         type = 3
@@ -29,15 +29,15 @@ resource "oci_core_security_list" "EtcdSubnet" {
   ingress_security_rules {
       # Allow LBaaS and internal VCN traffic
       protocol = "6"
-      source   = "${lookup(var.bmc_ingress_cidrs, "LBAAS-PHOENIX-1-CIDR")}"
+      source   = lookup(var.bmc_ingress_cidrs, "LBAAS-PHOENIX-1-CIDR")
   }
   ingress_security_rules {
       protocol = "6"
-      source   = "${lookup(var.bmc_ingress_cidrs, "LBAAS-ASHBURN-1-CIDR")}"
+      source   = lookup(var.bmc_ingress_cidrs, "LBAAS-ASHBURN-1-CIDR")
   }
   ingress_security_rules {
       protocol = "6"
-      source   = "${lookup(var.bmc_ingress_cidrs, "VCN-CIDR")}"
+      source   = lookup(var.bmc_ingress_cidrs, "VCN-CIDR")
   }
   ingress_security_rules {
       tcp_options {
@@ -46,7 +46,7 @@ resource "oci_core_security_list" "EtcdSubnet" {
       }
       
       protocol = "6"
-      source   = "${var.etcd_ssh_ingress}"
+      source   = var.etcd_ssh_ingress
   }
   ingress_security_rules {
       tcp_options {
@@ -55,7 +55,7 @@ resource "oci_core_security_list" "EtcdSubnet" {
       }
       
       protocol = "6"
-      source   = "${var.etcd_cluster_ingress}"
+      source   = var.etcd_cluster_ingress
   }
 
   provisioner "local-exec" {
@@ -64,9 +64,9 @@ resource "oci_core_security_list" "EtcdSubnet" {
 }
 
 resource "oci_core_security_list" "K8SMasterSubnet" {
-  compartment_id = "${var.compartment_ocid}"
+  compartment_id = var.compartment_ocid
   display_name   = "${var.label_prefix}k8sMaster_security_list"
-  vcn_id         = "${oci_core_virtual_network.CompleteVCN.id}"
+  vcn_id         = oci_core_virtual_network.CompleteVCN.id
 
   egress_security_rules {
       destination = "0.0.0.0/0"
@@ -75,7 +75,7 @@ resource "oci_core_security_list" "K8SMasterSubnet" {
   
   ingress_security_rules {
       protocol = "1"
-      source   = "${var.external_icmp_ingress}"
+      source   = var.external_icmp_ingress
 
       icmp_options {
         type = 3
@@ -84,7 +84,7 @@ resource "oci_core_security_list" "K8SMasterSubnet" {
   }
   ingress_security_rules {
       protocol = "1"
-      source   = "${var.internal_icmp_ingress}"
+      source   = var.internal_icmp_ingress
 
       icmp_options {
         type = 3
@@ -94,15 +94,15 @@ resource "oci_core_security_list" "K8SMasterSubnet" {
   ingress_security_rules {
       # Allow LBaaS and internal VCN traffic
       protocol = "6"
-      source   = "${lookup(var.bmc_ingress_cidrs, "LBAAS-PHOENIX-1-CIDR")}"
+      source   = lookup(var.bmc_ingress_cidrs, "LBAAS-PHOENIX-1-CIDR")
   }
   ingress_security_rules {
       protocol = "6"
-      source   = "${lookup(var.bmc_ingress_cidrs, "LBAAS-ASHBURN-1-CIDR")}"
+      source   = lookup(var.bmc_ingress_cidrs, "LBAAS-ASHBURN-1-CIDR")
   }
   ingress_security_rules {
       protocol = "all"
-      source   = "${lookup(var.bmc_ingress_cidrs, "VCN-CIDR")}"
+      source   = lookup(var.bmc_ingress_cidrs, "VCN-CIDR")
   }
   ingress_security_rules {
       tcp_options {
@@ -111,7 +111,7 @@ resource "oci_core_security_list" "K8SMasterSubnet" {
       }
 
       protocol = "6"
-      source   = "${var.master_ssh_ingress}"
+      source   = var.master_ssh_ingress
   }
   ingress_security_rules {
       tcp_options {
@@ -120,7 +120,7 @@ resource "oci_core_security_list" "K8SMasterSubnet" {
       }
 
       protocol = "6"
-      source   = "${lookup(var.bmc_ingress_cidrs, "VCN-CIDR")}"
+      source   = lookup(var.bmc_ingress_cidrs, "VCN-CIDR")
   }
   ingress_security_rules {
       tcp_options {
@@ -129,7 +129,7 @@ resource "oci_core_security_list" "K8SMasterSubnet" {
       }
 
       protocol = "6"
-      source   = "${var.master_https_ingress}"
+      source   = var.master_https_ingress
   }
   ingress_security_rules {
       tcp_options {
@@ -138,7 +138,7 @@ resource "oci_core_security_list" "K8SMasterSubnet" {
       }
 
       protocol = "6"
-      source   = "${var.master_nodeport_ingress}"
+      source   = var.master_nodeport_ingress
   }
 
   provisioner "local-exec" {
@@ -147,9 +147,9 @@ resource "oci_core_security_list" "K8SMasterSubnet" {
 }
 
 resource "oci_core_security_list" "K8SWorkerSubnet" {
-  compartment_id = "${var.compartment_ocid}"
+  compartment_id = var.compartment_ocid
   display_name   = "${var.label_prefix}k8sWorker_security_list"
-  vcn_id         = "${oci_core_virtual_network.CompleteVCN.id}"
+  vcn_id         = oci_core_virtual_network.CompleteVCN.id
 
   egress_security_rules {
       destination = "0.0.0.0/0"
@@ -158,7 +158,7 @@ resource "oci_core_security_list" "K8SWorkerSubnet" {
   
   ingress_security_rules {
       protocol = "1"
-      source   = "${var.external_icmp_ingress}"
+      source   = var.external_icmp_ingress
 
       icmp_options {
         type = 3
@@ -167,7 +167,7 @@ resource "oci_core_security_list" "K8SWorkerSubnet" {
   }
   ingress_security_rules {
       protocol = "1"
-      source   = "${var.internal_icmp_ingress}"
+      source   = var.internal_icmp_ingress
 
       icmp_options {
         type = 3
@@ -177,15 +177,15 @@ resource "oci_core_security_list" "K8SWorkerSubnet" {
   ingress_security_rules {
       # LBaaS and internal VCN traffic
       protocol = "6"
-      source   = "${lookup(var.bmc_ingress_cidrs, "LBAAS-PHOENIX-1-CIDR")}"
+      source   = lookup(var.bmc_ingress_cidrs, "LBAAS-PHOENIX-1-CIDR")
   }
   ingress_security_rules {
       protocol = "6"
-      source   = "${lookup(var.bmc_ingress_cidrs, "LBAAS-ASHBURN-1-CIDR")}"
+      source   = lookup(var.bmc_ingress_cidrs, "LBAAS-ASHBURN-1-CIDR")
   }
   ingress_security_rules {
       protocol = "all"
-      source   = "${lookup(var.bmc_ingress_cidrs, "VCN-CIDR")}"
+      source   = lookup(var.bmc_ingress_cidrs, "VCN-CIDR")
   }
   ingress_security_rules {
       # External traffic
@@ -195,7 +195,7 @@ resource "oci_core_security_list" "K8SWorkerSubnet" {
       }
 
       protocol = "6"
-      source   = "${var.worker_ssh_ingress}"
+      source   = var.worker_ssh_ingress
   }
   ingress_security_rules {
       tcp_options {
@@ -204,7 +204,7 @@ resource "oci_core_security_list" "K8SWorkerSubnet" {
       }
 
       protocol = "6"
-      source   = "${var.worker_nodeport_ingress}"
+      source   = var.worker_nodeport_ingress
   }
 
   provisioner "local-exec" {
@@ -213,10 +213,10 @@ resource "oci_core_security_list" "K8SWorkerSubnet" {
 }
 
 resource "oci_core_security_list" "PublicSecurityList" {
-  count          = "${var.control_plane_subnet_access == "private" ? "1" : "0"}"
-  compartment_id = "${var.compartment_ocid}"
+  count          = var.control_plane_subnet_access == "private" ? "1" : "0"
+  compartment_id = var.compartment_ocid
   display_name   = "public_security_list"
-  vcn_id         = "${oci_core_virtual_network.CompleteVCN.id}"
+  vcn_id         = oci_core_virtual_network.CompleteVCN.id
 
   egress_security_rules {
     protocol    = "all"
@@ -225,7 +225,7 @@ resource "oci_core_security_list" "PublicSecurityList" {
 
   ingress_security_rules {
       protocol = "1"
-      source   = "${var.external_icmp_ingress}"
+      source   = var.external_icmp_ingress
 
       icmp_options {
         type = 3
@@ -234,7 +234,7 @@ resource "oci_core_security_list" "PublicSecurityList" {
   }
   ingress_security_rules {
       protocol = "1"
-      source   = "${var.internal_icmp_ingress}"
+      source   = var.internal_icmp_ingress
 
       icmp_options {
         type = 3
@@ -244,21 +244,21 @@ resource "oci_core_security_list" "PublicSecurityList" {
   ingress_security_rules {
       # Allow LBaaS
       protocol = "6"
-      source   = "${lookup(var.bmc_ingress_cidrs, "LBAAS-PHOENIX-1-CIDR")}"
+      source   = lookup(var.bmc_ingress_cidrs, "LBAAS-PHOENIX-1-CIDR")
   }
   ingress_security_rules {
       protocol = "6"
-      source   = "${lookup(var.bmc_ingress_cidrs, "LBAAS-ASHBURN-1-CIDR")}"
+      source   = lookup(var.bmc_ingress_cidrs, "LBAAS-ASHBURN-1-CIDR")
   }
   ingress_security_rules {
       # Allow internal VCN traffic
       protocol = "all"
-      source   = "${lookup(var.bmc_ingress_cidrs, "VCN-CIDR")}"
+      source   = lookup(var.bmc_ingress_cidrs, "VCN-CIDR")
   }
   ingress_security_rules {
       # Access to SSH port to instances on the public network (like the NAT instance or a user-defined LB)
       protocol = "6"
-      source   = "${var.public_subnet_ssh_ingress}"
+      source   = var.public_subnet_ssh_ingress
 
       tcp_options {
         min = 22
@@ -268,7 +268,7 @@ resource "oci_core_security_list" "PublicSecurityList" {
   ingress_security_rules {
       # Access to port 80 and 443 to instances on the public network (like the NAT instance or a user-defined LB)
       protocol = "6"
-      source   = "${var.public_subnet_http_ingress}"
+      source   = var.public_subnet_http_ingress
 
       tcp_options {
         min = 80
@@ -277,7 +277,7 @@ resource "oci_core_security_list" "PublicSecurityList" {
   }
   ingress_security_rules {
       protocol = "6"
-      source   = "${var.public_subnet_https_ingress}"
+      source   = var.public_subnet_https_ingress
 
       tcp_options {
         min = 443
@@ -286,7 +286,7 @@ resource "oci_core_security_list" "PublicSecurityList" {
   }
   ingress_security_rules {
       protocol = "6"
-      source   = "${var.etcd_cluster_ingress}"
+      source   = var.etcd_cluster_ingress
       
       tcp_options {
         min = 2379
@@ -296,10 +296,10 @@ resource "oci_core_security_list" "PublicSecurityList" {
 }
 
 resource "oci_core_security_list" "NatSecurityList" {
-  count          = "${(var.control_plane_subnet_access == "private") && (var.dedicated_nat_subnets == "true") ? "1" : "0"}"
-  compartment_id = "${var.compartment_ocid}"
+  count          = (var.control_plane_subnet_access == "private") && (var.dedicated_nat_subnets == "true") ? "1" : "0"
+  compartment_id = var.compartment_ocid
   display_name   = "nat_security_list"
-  vcn_id         = "${oci_core_virtual_network.CompleteVCN.id}"
+  vcn_id         = oci_core_virtual_network.CompleteVCN.id
 
   egress_security_rules {
     protocol    = "all"
@@ -308,7 +308,7 @@ resource "oci_core_security_list" "NatSecurityList" {
 
   ingress_security_rules {
       protocol = "1"
-      source   = "${var.external_icmp_ingress}"
+      source   = var.external_icmp_ingress
 
       icmp_options {
         type = 3
@@ -317,7 +317,7 @@ resource "oci_core_security_list" "NatSecurityList" {
   }
   ingress_security_rules {
       protocol = "1"
-      source   = "${var.internal_icmp_ingress}"
+      source   = var.internal_icmp_ingress
 
       icmp_options {
         type = 3
@@ -327,21 +327,21 @@ resource "oci_core_security_list" "NatSecurityList" {
   ingress_security_rules {
       # Allow LBaaS
       protocol = "6"
-      source   = "${lookup(var.bmc_ingress_cidrs, "LBAAS-PHOENIX-1-CIDR")}"
+      source   = lookup(var.bmc_ingress_cidrs, "LBAAS-PHOENIX-1-CIDR")
   }
   ingress_security_rules {
       protocol = "6"
-      source   = "${lookup(var.bmc_ingress_cidrs, "LBAAS-ASHBURN-1-CIDR")}"
+      source   = lookup(var.bmc_ingress_cidrs, "LBAAS-ASHBURN-1-CIDR")
   }
   ingress_security_rules {
       # Allow internal VCN traffic
       protocol = "all"
-      source   = "${lookup(var.bmc_ingress_cidrs, "VCN-CIDR")}"
+      source   = lookup(var.bmc_ingress_cidrs, "VCN-CIDR")
   }
   ingress_security_rules {
       # Access to SSH port to instances on the public network (like the NAT instance or a user-defined LB)
       protocol = "6"
-      source   = "${var.public_subnet_ssh_ingress}"
+      source   = var.public_subnet_ssh_ingress
 
       tcp_options {
         min = 22
@@ -351,7 +351,7 @@ resource "oci_core_security_list" "NatSecurityList" {
   ingress_security_rules {
       # Access to port 80 and 443 to instances on the public network (like the NAT instance or a user-defined LB)
       protocol = "6"
-      source   = "${var.public_subnet_http_ingress}"
+      source   = var.public_subnet_http_ingress
 
       tcp_options {
         min = 80
@@ -360,7 +360,7 @@ resource "oci_core_security_list" "NatSecurityList" {
   }
   ingress_security_rules {
       protocol = "6"
-      source   = "${var.public_subnet_https_ingress}"
+      source   = var.public_subnet_https_ingress
 
       tcp_options {
         min = 443
@@ -369,7 +369,7 @@ resource "oci_core_security_list" "NatSecurityList" {
   }
   ingress_security_rules {
       protocol = "6"
-      source   = "${var.etcd_cluster_ingress}"
+      source   = var.etcd_cluster_ingress
       
       tcp_options {
         min = 2379
@@ -379,9 +379,9 @@ resource "oci_core_security_list" "NatSecurityList" {
 }
 
 resource "oci_core_security_list" "K8SCCMLBSubnet" {
-  compartment_id = "${var.compartment_ocid}"
+  compartment_id = var.compartment_ocid
   display_name   = "${var.label_prefix}k8sCCM_security_list"
-  vcn_id         = "${oci_core_virtual_network.CompleteVCN.id}"
+  vcn_id         = oci_core_virtual_network.CompleteVCN.id
   
   egress_security_rules {
     protocol    = "all"

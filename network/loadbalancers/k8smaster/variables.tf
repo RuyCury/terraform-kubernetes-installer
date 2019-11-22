@@ -17,17 +17,17 @@ variable "k8sMasterAd2Count" {}
 variable "k8sMasterAd3Count" {}
 
 variable "k8smaster_ad1_private_ips" {
-  type    = "list"
+  type    = list(string)
   default = []
 }
 
 variable "k8smaster_ad2_private_ips" {
-  type    = "list"
+  type    = list(string)
   default = []
 }
 
 variable "k8smaster_ad3_private_ips" {
-  type    = "list"
+  type    = list(string)
   default = []
 }
 

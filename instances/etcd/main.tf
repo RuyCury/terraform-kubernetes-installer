@@ -3,20 +3,20 @@
  */
 
 resource "oci_core_instance" "TFInstanceEtcd" {
-  count               = "${var.instances_count}"
-  availability_domain = "${var.availability_domain}"
-  compartment_id      = "${var.compartment_ocid}"
+  count               = var.instances_count
+  availability_domain = var.availability_domain
+  compartment_id      = var.compartment_ocid
   display_name        = "${var.label_prefix}${var.display_name_prefix}-${count.index}"
   hostname_label      = "${var.hostname_label_prefix}-${count.index}"
-  image               = "${lookup(data.oci_core_images.ImageOCID.images[0], "id")}"
-  shape               = "${var.shape}"
+  image               = lookup(data.oci_core_images.ImageOCID.images[0], "id")
+  shape               = var.shape
 
   create_vnic_details {
-    subnet_id         = "${var.subnet_id}"
+    subnet_id         = var.subnet_id
     display_name      = "${var.label_prefix}${var.display_name_prefix}-${count.index}"
     hostname_label    = "${var.hostname_label_prefix}-${count.index}"
-    assign_public_ip  = "${(var.control_plane_subnet_access == "private") ? "false" : "true"}"
-    private_ip        = "${var.assign_private_ip == "true" ? cidrhost(lookup(var.network_cidrs,var.subnet_name), count.index+2) : ""}"
+    assign_public_ip  = (var.control_plane_subnet_access == "private") ? "false" : "true"
+    private_ip        = var.assign_private_ip == "true" ? cidrhost(lookup(var.network_cidrs,var.subnet_name), count.index+2) : ""
   }
 
   extended_metadata = {
@@ -38,18 +38,18 @@ resource "oci_core_instance" "TFInstanceEtcd" {
 }
 
 resource "oci_core_volume" "TFVolumeInstanceEtcd" {
-  count               = "${var.etcd_iscsi_volume_create ? var.instances_count : 0}"
-  availability_domain = "${var.availability_domain}"
-  compartment_id      = "${var.compartment_ocid}"
+  count               = var.etcd_iscsi_volume_create ? var.instances_count : 0
+  availability_domain = var.availability_domain
+  compartment_id      = var.compartment_ocid
   display_name        = "block-volume-${var.hostname_label_prefix}-${count.index}"
-  size_in_gbs         = "${var.etcd_iscsi_volume_size}"
+  size_in_gbs         = var.etcd_iscsi_volume_size
 }
 
 resource "oci_core_volume_attachment" "TFVolumeAttachmentInstanceEtcd" {
-  count           = "${var.etcd_iscsi_volume_create ? var.instances_count : 0}"
+  count           = var.etcd_iscsi_volume_create ? var.instances_count : 0
   attachment_type = "iscsi"
 #  compartment_id  = "${var.compartment_ocid}"
-  instance_id     = "${oci_core_instance.TFInstanceEtcd.*.id[count.index]}"
-  volume_id       = "${oci_core_volume.TFVolumeInstanceEtcd.*.id[count.index]}"
-  depends_on      = ["oci_core_instance.TFInstanceEtcd", "oci_core_volume.TFVolumeInstanceEtcd"]
+  instance_id     = oci_core_instance.TFInstanceEtcd.*.id[count.index]
+  volume_id       = oci_core_volume.TFVolumeInstanceEtcd.*.id[count.index]
+  depends_on      = [oci_core_instance.TFInstanceEtcd, oci_core_volume.TFVolumeInstanceEtcd]
 }

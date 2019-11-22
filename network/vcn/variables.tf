@@ -1,5 +1,5 @@
 variable "network_cidrs" {
-  type = "map"
+  type = map(string)
 
   default = {
     VCN-CIDR          = "10.0.0.0/16"
@@ -25,7 +25,7 @@ variable "network_cidrs" {
 }
 
 variable "network_subnet_dns" {
-  type = "map"
+  type = map(string)
 
   default = {
     etcdSubnetAD1     = "etcdsubnet1"
@@ -51,34 +51,34 @@ variable "control_plane_subnet_access" {
 }
 
 variable "additional_etcd_security_lists_ids" {
-  type    = "list"
+  type    = list(string)
   default = []
 }
 
 variable "additional_k8smaster_security_lists_ids" {
-  type    = "list"
+  type    = list(string)
   default = []
 }
 
 variable "additional_k8sworker_security_lists_ids" {
-  type    = "list"
+  type    = list(string)
   default = []
 }
 
 variable "additional_public_security_lists_ids" {
-  type    = "list"
+  type    = list(string)
   default = []
 }
 
 variable "additional_nat_security_lists_ids" {
-  type    = "list"
+  type    = list(string)
   default = []
 }
 
 # VCN
 
 variable "label_prefix" {
-  type    = "string"
+  type    = string
   default = ""
 }
 
@@ -88,7 +88,7 @@ variable "vcn_dns_name" {}
 # Security lists
 
 variable "bmc_ingress_cidrs" {
-  type = "map"
+  type = map(string)
 
   default = {
     LBAAS-PHOENIX-1-CIDR = "129.144.0.0/12"
@@ -154,7 +154,7 @@ variable "nat_instance_oracle_linux_image_name" {
 }
 
 variable "nat_instance_shape" {
-  default = "VM.Standard1.2"
+  default = "VM.Standard.E2.1"
 }
 
 variable nat_instance_ad1_enabled {

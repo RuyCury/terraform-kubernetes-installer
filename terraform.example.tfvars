@@ -12,9 +12,9 @@
 #cloud_controller_user_fingerprint = "ed:51:83:3b:d2:04:f4:af:9d:7b:17:96:dd:8a:99:bc"
 #cloud_controller_user_private_key_path = "/tmp/oci_api_key.pem"
 
-#etcdShape = "VM.Standard1.2"
-#k8sMasterShape = "VM.Standard1.8"
-#k8sWorkerShape = "VM.Standard1.8"
+#etcdShape = "VM.Standard.E2.2"
+#k8sMasterShape = "VM.Standard.E2.2"
+#k8sWorkerShape = "VM.Standard.E2.1"
 
 #etcdAd1Count = "1"
 #etcdAd2Count = "1"
@@ -42,7 +42,7 @@
 
 #control_plane_subnet_access = "public"
 #k8s_master_lb_access = "public"
-#natInstanceShape = "VM.Standard1.2"
+#natInstanceShape = "VM.Standard.E2.1"
 #nat_instance_ad1_enabled = "true"
 #nat_instance_ad2_enabled = "false"
 #nat_instance_ad3_enabled = "true"

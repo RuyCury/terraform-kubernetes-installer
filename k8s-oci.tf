@@ -14,7 +14,7 @@ locals {
 
   etcd_endpoints = var.etcd_lb_enabled == "true" ? join(
     ",",
-    formatlist("http://%s:2379", module.etcd-lb.ip_addresses),
+    formatlist("http://%s:2379", flatten(module.etcd-lb.ip_addresses)),
     ) : join(
     ",",
     formatlist(
@@ -135,7 +135,7 @@ module "instances-etcd-ad1" {
   control_plane_subnet_access = var.control_plane_subnet_access
   display_name_prefix         = "etcd-ad1"
   domain_name                 = var.domain_name
-  etcd_discovery_url          = template_file.etcd_discovery_url.id
+  etcd_discovery_url          = null_resource.etcd_discovery_url.id
   etcd_ver                    = var.etcd_ver
   hostname_label_prefix       = "etcd-ad1"
   oracle_linux_image_name     = var.etcd_ol_image_name
@@ -161,7 +161,7 @@ module "instances-etcd-ad2" {
   control_plane_subnet_access = var.control_plane_subnet_access
   display_name_prefix         = "etcd-ad2"
   domain_name                 = var.domain_name
-  etcd_discovery_url          = template_file.etcd_discovery_url.id
+  etcd_discovery_url          = null_resource.etcd_discovery_url.id
   etcd_ver                    = var.etcd_ver
   hostname_label_prefix       = "etcd-ad2"
   oracle_linux_image_name     = var.etcd_ol_image_name
@@ -188,7 +188,7 @@ module "instances-etcd-ad3" {
   display_name_prefix         = "etcd-ad3"
   docker_ver                  = var.docker_ver
   domain_name                 = var.domain_name
-  etcd_discovery_url          = template_file.etcd_discovery_url.id
+  etcd_discovery_url          = null_resource.etcd_discovery_url.id
   etcd_ver                    = var.etcd_ver
   hostname_label_prefix       = "etcd-ad3"
   oracle_linux_image_name     = var.etcd_ol_image_name
@@ -221,7 +221,7 @@ module "instances-k8smaster-ad1" {
   master_docker_max_log_size  = var.master_docker_max_log_size
   master_docker_max_log_files = var.master_docker_max_log_files
   domain_name                 = var.domain_name
-  etcd_discovery_url          = template_file.etcd_discovery_url.id
+  etcd_discovery_url          = null_resource.etcd_discovery_url.id
   etcd_ver                    = var.etcd_ver
   flannel_ver                 = var.flannel_ver
   hostname_label_prefix       = "k8s-master-ad1"
@@ -267,7 +267,7 @@ module "instances-k8smaster-ad2" {
   master_docker_max_log_size  = var.master_docker_max_log_size
   master_docker_max_log_files = var.master_docker_max_log_files
   domain_name                 = var.domain_name
-  etcd_discovery_url          = template_file.etcd_discovery_url.id
+  etcd_discovery_url          = null_resource.etcd_discovery_url.id
   etcd_ver                    = var.etcd_ver
   flannel_ver                 = var.flannel_ver
   hostname_label_prefix       = "k8s-master-ad2"
@@ -313,7 +313,7 @@ module "instances-k8smaster-ad3" {
   master_docker_max_log_size  = var.master_docker_max_log_size
   master_docker_max_log_files = var.master_docker_max_log_files
   domain_name                 = var.domain_name
-  etcd_discovery_url          = template_file.etcd_discovery_url.id
+  etcd_discovery_url          = null_resource.etcd_discovery_url.id
   etcd_ver                    = var.etcd_ver
   flannel_ver                 = var.flannel_ver
   hostname_label_prefix       = "k8s-master-ad3"
@@ -463,9 +463,9 @@ module "etcd-lb" {
     join(" ", module.vcn.public_subnet_ad2_id),
     join(" ", [module.vcn.etcd_subnet_ad2_id]),
   )
-  etcd_ad1_private_ips = module.instances-etcd-ad1.private_ips
-  etcd_ad2_private_ips = module.instances-etcd-ad2.private_ips
-  etcd_ad3_private_ips = module.instances-etcd-ad3.private_ips
+  etcd_ad1_private_ips = flatten(module.instances-etcd-ad1.private_ips)
+  etcd_ad2_private_ips = flatten(module.instances-etcd-ad2.private_ips)
+  etcd_ad3_private_ips = flatten(module.instances-etcd-ad3.private_ips)
   etcdAd1Count         = var.etcdAd1Count
   etcdAd2Count         = var.etcdAd2Count
   etcdAd3Count         = var.etcdAd3Count
@@ -488,9 +488,9 @@ module "k8smaster-public-lb" {
     join(" ", module.vcn.public_subnet_ad2_id),
     join(" ", [module.vcn.k8smaster_subnet_ad2_id]),
   )
-  k8smaster_ad1_private_ips = module.instances-k8smaster-ad1.private_ips
-  k8smaster_ad2_private_ips = module.instances-k8smaster-ad2.private_ips
-  k8smaster_ad3_private_ips = module.instances-k8smaster-ad3.private_ips
+  k8smaster_ad1_private_ips = flatten(module.instances-k8smaster-ad1.private_ips)
+  k8smaster_ad2_private_ips = flatten(module.instances-k8smaster-ad2.private_ips)
+  k8smaster_ad3_private_ips = flatten(module.instances-k8smaster-ad3.private_ips)
   k8sMasterAd1Count         = var.k8sMasterAd1Count
   k8sMasterAd2Count         = var.k8sMasterAd2Count
   k8sMasterAd3Count         = var.k8sMasterAd3Count
@@ -501,9 +501,9 @@ module "k8smaster-public-lb" {
 module "reverse-proxy" {
   source = "./network/loadbalancers/reverse-proxy"
   hosts = concat(
-    module.instances-k8smaster-ad1.private_ips,
-    module.instances-k8smaster-ad2.private_ips,
-    module.instances-k8smaster-ad3.private_ips,
+    flatten(module.instances-k8smaster-ad1.private_ips),
+    flatten(module.instances-k8smaster-ad2.private_ips),
+    flatten(module.instances-k8smaster-ad3.private_ips),
   )
 }
 
